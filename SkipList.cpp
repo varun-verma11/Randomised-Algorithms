@@ -125,7 +125,7 @@ int SkipList::add(SkipListNode* target, SkipListNode* newNode, unsigned int leve
 			add(target,newNode,level-1);
 		}	
 		return 0;
-	}
+	} 
 	return add(next,newNode,level);
 
 	
