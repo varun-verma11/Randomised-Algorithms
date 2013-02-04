@@ -139,11 +139,19 @@ SkipListNode* SkipList::find(SkipListNode* target, const Key& key, unsigned int 
         countFind++;
     }
     ////////////// Write your code below  ////////////////////////
+	if (target==NULL ) return NULL;
+	if (target->compare(key)==0) return target;
+
+	SkipListNode *current = target->nextAtLevel(level);
+	
+	if (current==NULL || target->compare(key)<0) 
+	{
+		if (level==0) return NULL;
+		return find(target, key, level-1);
+	}
 
 
-
-
-    return target;
+    return find(current,key,level);
 }
 
 
@@ -154,8 +162,31 @@ SkipListNode* SkipList::del(SkipListNode* target, const Key& key, unsigned int l
     if (target->nextAtLevel(level) != NULL && *(target->nextAtLevel(level)) < key) {
         countDelete++;
     }
-    ////////////// Write your code below  ////////////////////////
 
+    if (target==NULL ) return NULL;
+	
+	SkipListNode *current = target->nextAtLevel(level);
 
-    return NULL; ///you have to replace this line with your own.
+	if (current==NULL) 
+	{
+		if (level==0) return NULL;
+		return del(target, key, level-1);
+	}
+
+	int comparison = current->compare(key);
+
+	if (level==0 &&( t==NULL || comparison<0)) return NULL;
+
+	if (comparison<0) 
+	{
+		return (target, key, level-1);
+	}
+	if (comparison==0)
+	{
+		target->setNextAtLevel(level, current->nextAtLevel(level));
+		if (level==0) return current;
+		return del(target, key, level-1);
+	}
+	
+    return del(current,key,level); ///you have to replace this line with your own.
 }
