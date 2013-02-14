@@ -175,11 +175,11 @@ SkipListNode* SkipList::del(SkipListNode* target, const Key& key, unsigned int l
 
 	int comparison = current->compare(key);
 
-	if (level==0 &&( t==NULL || comparison<0)) return NULL;
+	if (level==0 && comparison<0) return NULL;
 
 	if (comparison<0) 
 	{
-		return (target, key, level-1);
+		return del(target, key, level-1);
 	}
 	if (comparison==0)
 	{

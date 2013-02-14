@@ -80,10 +80,10 @@ void BloomFilter::dump() {
 void BloomFilter::add(const Key& key) {
     countAdd++;
     ////////////// Write your code below  ////////////////////////
-
-
-
-
+		unsigned long h1 = hash1(key);
+		unsigned long h2 = hash2(key);
+		unsigned long p1 = h1 / m_pocket_size;
+		unsigned long p2 = h2 / m_pocket_size;
 }
 
 
