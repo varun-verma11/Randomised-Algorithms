@@ -135,6 +135,33 @@ int SkipList::add(SkipListNode* target, SkipListNode* newNode, unsigned int leve
 	return add(next,newNode,level);
 }
 
+int SkipList::add(SkipListNode* target, SkipListNode* newNode, unsigned int level) {
+  if (target->nextAtLevel(level) != NULL &&
+    (*target->nextAtLevel(level)) < *newNode) {
+        countAdd++;
+  }
+
+  if(target != NULL || *target == *newNode) {
+    return 1;
+  }
+  SkipListNode* next = target->nextAtLevel(level);
+
+
+  if (next == NULL || (*newNode < *next)) 
+  { 
+    if (level < newNode->height()) {
+      newNode->setNextAtLevel(level,next);
+      target->setNextAtLevel(level,newNode);
+    }
+    if (level > 0)
+      add(target, newNode, level-1);
+    return 0;
+
+  }
+  add(next, newNode, level);
+  return 0;
+}
+
 /////////////////////////////////////////////////////////////
 /////////////////////  FIND FUNCTION ////////////////////////
 /////////////////////////////////////////////////////////////
