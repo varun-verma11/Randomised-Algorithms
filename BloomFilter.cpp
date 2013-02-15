@@ -82,8 +82,15 @@ void BloomFilter::add(const Key& key) {
     ////////////// Write your code below  ////////////////////////
 		unsigned long h1 = hash1(key);
 		unsigned long h2 = hash2(key);
-		unsigned long p1 = h1 / m_pocket_size;
-		unsigned long p2 = h2 / m_pocket_size;
+		
+		unsigned int p1 = h1 / m_pocketSize;
+		unsigned int p2 = h2 / m_pocketSize;
+		
+		unsigned long add1 = 1 << (h1 % m_pocketSize);
+		unsigned long add2 = 1 << (h2 % m_pocketSize);
+
+		m_tickBook[p1] |= add1;
+		m_tickBook[p2] |= add2;		
 }
 
 
@@ -94,10 +101,18 @@ void BloomFilter::add(const Key& key) {
 
 bool BloomFilter::exist(const Key& key) {
     countFind++;
-    ////////////// Write your code below  ////////////////////////
+		
+		unsigned long h1 = hash1(key);
+		unsigned long h2 = hash2(key);	
+		
+		unsigned int p1 = h1 / m_pocketSize;
+		unsigned int p2 = h2 / m_pocketSize;
 
+		unsigned long add1 = 1 << (h1 % m_pocketSize);
+		unsigned long add2 = 1 << (h2 % m_pocketSize);
 
-    return false; //you have to replace this line with your own.
+		return (add1 & m_tickBook[p1]) 
+			&& (add2 & m_tickBook[p2]); 
 }
 
 
@@ -107,9 +122,18 @@ bool BloomFilter::exist(const Key& key) {
 
 void BloomFilter::del(const Key& key) {
     countDelete++;
-    ////////////// Write your code below  ////////////////////////
 
+		unsigned long h1 = hash1(key);
+		unsigned long h2 = hash2(key);	
+		
+		unsigned int p1 = h1 / m_pocketSize;
+		unsigned int p2 = h2 / m_pocketSize;
 
+		unsigned long add1 = 1 << (h1 % m_pocketSize);
+		unsigned long add2 = 1 << (h2 % m_pocketSize);
+
+		m_tickBook[p1] &= ~add1;
+		m_tickBook[p2] &= ~add2;
 }
 
 
