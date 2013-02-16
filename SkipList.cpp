@@ -109,14 +109,13 @@ unsigned int SkipList::randHeight() {
 	return i;
 }
 
-
 int SkipList::add(SkipListNode* target, SkipListNode* newNode, unsigned int level) {
   if (target->nextAtLevel(level) != NULL &&
           (*target->nextAtLevel(level)) < *newNode) {
       countAdd++;
   }
 	
-	if (target!=NULL || *target == *newNode) return 1;
+	//if (target!=NULL || *target == *newNode) return 1;
 	
 	SkipListNode* next = target->nextAtLevel(level);
 	if (next == NULL || /* or else*/ *newNode < *next) 
@@ -127,10 +126,9 @@ int SkipList::add(SkipListNode* target, SkipListNode* newNode, unsigned int leve
 		  target->setNextAtLevel(level, newNode);
 		}
 		if (level>0) 
-		{
-			return add(target,newNode,level-1);
-		}
-		return add(next, newNode, level);
+			add(target,newNode,level-1);
+		return 1;
+		//return add(next, newNode, level);
 	} 
 	return add(next,newNode,level);
 }
@@ -163,34 +161,31 @@ SkipListNode* SkipList::find(SkipListNode* target, const Key& key, unsigned int 
 /////////////////////  DEL FUNCTION ////////////////////////
 /////////////////////////////////////////////////////////////
 SkipListNode* SkipList::del(SkipListNode* target, const Key& key, unsigned int level) {
-    if (target->nextAtLevel(level) != NULL && *(target->nextAtLevel(level)) < key) {
-        countDelete++;
-    }
-
-    if (target==NULL ) return NULL;
+  if (target->nextAtLevel(level) != NULL && *(target->nextAtLevel(level)) < key) {
+      countDelete++;
+  }
+  //if (target==NULL ) return NULL;
 	
-	SkipListNode *current = target->nextAtLevel(level);
+	SkipListNode *next = target->nextAtLevel(level);
 
-	if (current==NULL) 
+	if (next==NULL) 
 	{
 		if (level==0) return NULL;
 		return del(target, key, level-1);
 	}
 
-	int comparison = current->compare(key);
-
-	if (level==0 && comparison<0) return NULL;
-
-	if (comparison<0) 
+  if (*next==key)
 	{
+		target->setNextAtLevel(level, next->nextAtLevel(level));
+		if (level==0) return next;
 		return del(target, key, level-1);
 	}
-	if (comparison==0)
+	//if (level==0 && comparison<0) return NULL;
+
+	if (*next<key) 
 	{
-		target->setNextAtLevel(level, current->nextAtLevel(level));
-		if (level==0) return current;
-		return del(target, key, level-1);
+		return del(next, key, level);
 	}
 	
-    return del(current,key,level); ///you have to replace this line with your own.
+  return NULL;
 }
