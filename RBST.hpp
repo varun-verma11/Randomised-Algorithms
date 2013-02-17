@@ -40,11 +40,19 @@ public:
         m_right =right;
         return this;
     }
+    int getSize() {
+     return nodeSize;
+    }
+
+    void setSize(int newSize){
+     nodeSize = newSize;
+    }
 
 private:
     RBSTNode() {}
     RBSTNode* m_left;
     RBSTNode* m_right;
+    int nodeSize;
 };
 
 
@@ -72,6 +80,9 @@ private:
     RBSTNode*  rightRotate(RBSTNode* target);
     RBSTNode*  leftRotate(RBSTNode* target);
 
+    RBSTNode* deleteLeftMostNode(RBSTNode *target);
+    RBSTNode* getLeftMostNode(RBSTNode* target);
+    RBSTNode* removeNode(RBSTNode* target);
     RBSTNode* del(RBSTNode* target, const Key& key);
 
     RBSTNode* find(RBSTNode* target, const Key& key);
