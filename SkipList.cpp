@@ -115,7 +115,7 @@ int SkipList::add(SkipListNode* target, SkipListNode* newNode, unsigned int leve
       countAdd++;
   }
 	
-	//if (target!=NULL || *target == *newNode) return 1;
+	//if (target!=NULL || *target == *newNode) return 0;
 	
 	SkipListNode* next = target->nextAtLevel(level);
 	if (next == NULL || /* or else*/ *newNode < *next) 
@@ -126,7 +126,7 @@ int SkipList::add(SkipListNode* target, SkipListNode* newNode, unsigned int leve
 		  target->setNextAtLevel(level, newNode);
 		}
 		if (level>0) 
-			add(target,newNode,level-1);
+			return add(target,newNode,level-1);
 		return 1;
 		//return add(next, newNode, level);
 	} 
