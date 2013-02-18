@@ -156,42 +156,36 @@ SkipListNode* SkipList::find(SkipListNode* target, const Key& key, unsigned int 
     return find(current,key,level);
 }
 
-SkipListNode* SkipList::del(SkipListNode* target, const Key& key, unsigned int level) {
-if (target->nextAtLevel(level) != NULL && *(target->nextAtLevel(level)) < key) {
-countDelete++;
-}
-
-SkipListNode* t = target->nextAtLevel(level);
-
-// we have reached the end of the current level
-if (t == NULL) {
-if (level == 0) 
-return NULL;
-return del(target, key, level - 1);
-}
-// we found the node to be deleted
-if (*t == key) {
-// delete it from the current level
-SkipListNode* nextt = t->nextAtLevel(level);
-target->setNextAtLevel(level, nextt);
-
-// delete it from the next level
-if (level > 0) 
-return del(target, key, level - 1);
-
-return t;
-}
-
-// the node may still be in the current level
-if (*t < key) {
-return del(t, key, level);
-}
-
-// the node is not in the current level
-return NULL; 
-}
 
 /////////////////////////////////////////////////////////////
 /////////////////////  DEL FUNCTION ////////////////////////
 /////////////////////////////////////////////////////////////
+SkipListNode* SkipList::del(SkipListNode* target, const Key& key, unsigned int level) {
+  if (target->nextAtLevel(level) != NULL && *(target->nextAtLevel(level)) < key) {
+      countDelete++;
+  }
+  //if (target==NULL ) return NULL;
+	
+	SkipListNode *next = target->nextAtLevel(level);
 
+	if (next==NULL) 
+	{
+		if (level==0) return NULL;
+		return del(target, key, level-1);
+	}
+
+  if (*next==key)
+	{
+		target->setNextAtLevel(level, next->nextAtLevel(level));
+		if (level==0) return next;
+		return del(target, key, level-1);
+	}
+	//if (level==0 && comparison<0) return NULL;
+
+	if (*next<key) 
+	{
+		return del(next, key, level);
+	}
+	
+  return NULL;
+}
